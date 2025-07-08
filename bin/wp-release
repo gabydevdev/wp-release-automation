@@ -44,6 +44,16 @@ program
   });
 
 program
+  .command('publish')
+  .description('Run full release process and push to Git')
+  .option('-t, --type <type>', 'Release type (patch, minor, major)', 'patch')
+  .option('-d, --dry-run', 'Dry run without making changes')
+  .action(async (options) => {
+    const { publishCommand } = require('../src/commands/publish');
+    await publishCommand(options);
+  });
+
+program
   .command('zip')
   .description('Create ZIP archive from build directory')
   .option('-v, --version <version>', 'Specific version for ZIP filename')

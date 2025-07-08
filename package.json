@@ -4,10 +4,20 @@
 	"description": "A reusable task package for automating release processes for WordPress plugins and themes.",
 	"main": "src/index.js",
 	"scripts": {
-		"version": "node src/commands/version.js",
-		"build": "node src/commands/build.js",
-		"zip": "node src/commands/zip.js",
-		"release": "node src/commands/release.js"
+		"version:patch": "npm version patch --no-git-tag-version",
+		"version:minor": "npm version minor --no-git-tag-version", 
+		"version:major": "npm version major --no-git-tag-version",
+		"version:set": "npm version $npm_config_version --no-git-tag-version",
+		"build": "node scripts/update-version.js",
+		"zip": "node scripts/create-zip.js",
+		"git:tag": "node scripts/create-git-tag.js",
+		"git:push": "node scripts/git-push.js",
+		"release": "npm run build && npm run zip && npm run git:tag",
+		"publish": "npm run release && npm run git:push",
+		"dev:version": "node src/commands/version.js",
+		"dev:build": "node src/commands/build.js",
+		"dev:zip": "node src/commands/zip.js",
+		"dev:release": "node src/commands/release.js"
 	},
 	"bin": {
 		"wp-release": "./bin/wp-release"
