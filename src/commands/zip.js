@@ -1,25 +1,69 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const archiver = require('archiver');
+const chalk = require('chalk');
 
-const zipPlugin = (pluginName, outputDir) => {
-    const output = fs.createWriteStream(path.join(outputDir, `${pluginName}.zip`));
-    const archive = archiver('zip', {
-        zlib: { level: 9 }
+async function zipCommand(options) {
+    try {
+        console.log(chalk.blue('📦 Creating ZIP archive...'));
+        
+        // Load configuration
+        const configPath = path.join(process.cwd(), 'wp-release.config.js');
+        if (!fs.existsSync(configPath)) {
+            console.log(chalk.red('❌ No configuration found. Run wp-release init first.'));
+            return;
+        }
+        
+        const config = require(configPath);
+        const buildDir = path.join(process.cwd(), config.buildDir);
+        
+        if (!fs.existsSync(buildDir)) {
+            console.log(chalk.red('❌ Build directory not found. Run wp-release build first.'));
+            return;
+        }
+        
+        // Get version from package.json
+        const packageJsonPath = path.join(process.cwd(), 'package.json');
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+        const version = options.version || packageJson.version;
+        
+        // Generate ZIP filename
+        const zipName = config.zipName
+            .replace('{{name}}', config.pluginName)
+            .replace('{{version}}', version);
+        
+        const zipPath = path.join(process.cwd(), zipName);
+        
+        await createZipArchive(buildDir, zipPath);
+        
+        console.log(chalk.green(`✅ ZIP archive created: ${zipName}`));
+        
+    } catch (error) {
+        console.error(chalk.red('❌ ZIP creation failed:'), error.message);
+        process.exit(1);
+    }
+}
+
+function createZipArchive(sourceDir, outputPath) {
+    return new Promise((resolve, reject) => {
+        const output = fs.createWriteStream(outputPath);
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+
+        output.on('close', () => {
+            console.log(chalk.blue(`📊 ${archive.pointer()} total bytes`));
+            resolve();
+        });
+
+        archive.on('error', (err) => {
+            reject(err);
+        });
+
+        archive.pipe(output);
+        archive.directory(sourceDir, false);
+        archive.finalize();
     });
+}
 
-    output.on('close', () => {
-        console.log(`${archive.pointer()} total bytes`);
-        console.log('Zip archive has been finalized and the output file descriptor has closed.');
-    });
-
-    archive.on('error', (err) => {
-        throw err;
-    });
-
-    archive.pipe(output);
-    archive.directory(path.join(process.cwd(), pluginName), false);
-    archive.finalize();
-};
-
-module.exports = zipPlugin;
+module.exports = { zipCommand, createZipArchive };
