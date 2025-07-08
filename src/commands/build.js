@@ -23,21 +23,37 @@ async function buildCommand(options) {
         
         // Copy files excluding patterns
         console.log(chalk.blue('📂 Copying files...'));
-        const excludeArgs = config.excludePatterns
+        
+        // Add build directory to exclude patterns to prevent copying to itself
+        const allExcludePatterns = [...config.excludePatterns, config.buildDir + '/'];
+        
+        const excludeArgs = allExcludePatterns
             .map(pattern => `--exclude=${pattern}`)
             .join(' ');
         
         if (shell.which('rsync')) {
             shell.exec(`rsync -av ${excludeArgs} . ${buildDir}/`);
         } else {
-            // Fallback for Windows without rsync
-            await fs.copy('.', buildDir, {
-                filter: (src) => {
-                    return !config.excludePatterns.some(pattern => 
-                        src.includes(pattern.replace('/', '').replace('*', ''))
-                    );
+            // Fallback for Windows without rsync - copy files individually
+            const files = await fs.readdir('.');
+            
+            for (const file of files) {
+                // Skip if it's the build directory
+                if (file === config.buildDir) {
+                    continue;
                 }
-            });
+                
+                const shouldExclude = allExcludePatterns.some(pattern => {
+                    const cleanPattern = pattern.replace('/', '').replace('*', '');
+                    return file.includes(cleanPattern) || file.match(new RegExp(pattern.replace('*', '.*')));
+                });
+                
+                if (!shouldExclude) {
+                    const srcPath = path.join(process.cwd(), file);
+                    const destPath = path.join(buildDir, file);
+                    await fs.copy(srcPath, destPath);
+                }
+            }
         }
         
         console.log(chalk.green('✅ Build process completed successfully.'));

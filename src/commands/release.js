@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
-const { bumpVersion } = require('./version');
+const { bumpVersion, updateFiles } = require('./version');
 const { buildCommand } = require('./build');
 const { zipCommand } = require('./zip');
 const { commitChanges, pushChanges } = require('../utils/git-operations');
@@ -30,6 +30,7 @@ async function releaseCommand(options) {
         
         // Bump version
         const newVersion = bumpVersion(options.type || 'patch');
+        updateFiles(newVersion);
         console.log(chalk.green(`📝 Version bumped to ${newVersion}`));
         
         // Run pre-build hooks

@@ -24,17 +24,40 @@ function bumpVersion(type) {
 }
 
 function updateFiles(newVersion) {
+	// Load configuration to get main file
+	const configPath = path.join(process.cwd(), 'wp-release.config.js');
+	let mainFile = null;
+	
+	if (fs.existsSync(configPath)) {
+		const config = require(configPath);
+		mainFile = config.mainFile;
+	}
+	
 	const filesToUpdate = [
 		'README.md',
 		'CHANGELOG.md'
 	];
+	
+	// Add main plugin file if it exists
+	if (mainFile) {
+		filesToUpdate.push(mainFile);
+	}
 
 	filesToUpdate.forEach(file => {
 		const filePath = path.resolve(process.cwd(), file);
 		if (fs.existsSync(filePath)) {
 			let content = fs.readFileSync(filePath, 'utf8');
-			content = content.replace(/Version: \d+\.\d+\.\d+/, `Version: ${newVersion}`);
+			
+			// For PHP files, update WordPress plugin header format
+			if (file.endsWith('.php')) {
+				content = content.replace(/(\* Version:\s*)\d+\.\d+\.\d+/, `$1${newVersion}`);
+			} else {
+				// For other files, use generic format
+				content = content.replace(/Version: \d+\.\d+\.\d+/, `Version: ${newVersion}`);
+			}
+			
 			fs.writeFileSync(filePath, content);
+			console.log(chalk.blue(`📝 Updated version in ${file}`));
 		}
 	});
 }

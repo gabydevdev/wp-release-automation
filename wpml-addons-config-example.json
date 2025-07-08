@@ -1,0 +1,42 @@
+{
+  "pluginName": "WPML Addons",
+  "version": "1.0.0",
+  "mainFile": "wpml-addons.php",
+  "buildDir": "build",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/wpml-addons.git"
+  },
+  "author": "Your Name",
+  "license": "GPL-2.0-or-later",
+  "files": [
+    "wpml-addons.php",
+    "README.md",
+    "includes/",
+    "assets/",
+    "languages/",
+    "uninstall.php"
+  ],
+  "excludeFiles": [
+    "node_modules/",
+    ".git/",
+    ".gitignore",
+    "package.json",
+    "package-lock.json",
+    "webpack.config.js",
+    "src/",
+    "tests/",
+    ".eslintrc.json",
+    "phpcs.xml",
+    "composer.json",
+    "composer.lock"
+  ],
+  "config": {
+    "branch": "main",
+    "tagPrefix": "v",
+    "zipFileName": "wpml-addons.zip",
+    "autoCommit": true,
+    "autoPush": true,
+    "createTag": true
+  }
+}
