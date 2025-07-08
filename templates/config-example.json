@@ -1,0 +1,20 @@
+{
+	"pluginName": "Your Plugin Name",
+	"version": "1.0.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yourusername/your-plugin.git"
+	},
+	"author": "Your Name",
+	"license": "GPL-2.0-or-later",
+	"files": [
+		"your-plugin-file.php",
+		"README.md",
+		"includes/class-your-plugin.php"
+	],
+	"config": {
+		"branch": "main",
+		"tagPrefix": "v",
+		"zipFileName": "your-plugin.zip"
+	}
+}

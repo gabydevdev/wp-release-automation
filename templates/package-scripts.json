@@ -1,0 +1,7 @@
+{
+	"version:update": "node src/commands/version.js",
+	"build": "node src/commands/build.js",
+	"zip": "node src/commands/zip.js",
+	"release": "npm run version:update && npm run build && npm run zip && git push origin main && git push origin --tags",
+	"release:local": "npm run version:update && npm run build && npm run zip"
+}
