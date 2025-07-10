@@ -1,11 +1,11 @@
 {
 	"name": "wp-release-automation",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A comprehensive CLI tool for automating WordPress plugin and theme release processes with version management, ZIP creation, and Git integration.",
 	"main": "src/index.js",
 	"scripts": {
 		"version:patch": "npm version patch --no-git-tag-version",
-		"version:minor": "npm version minor --no-git-tag-version", 
+		"version:minor": "npm version minor --no-git-tag-version",
 		"version:major": "npm version major --no-git-tag-version",
 		"version:set": "npm version $npm_config_version --no-git-tag-version",
 		"build": "node scripts/update-version.js",
