@@ -34,7 +34,7 @@ async function zipCommand(options) {
         
         const zipPath = path.join(process.cwd(), zipName);
         
-        await createZipArchive(buildDir, zipPath);
+        await createZipArchive(buildDir, zipPath, config.pluginName);
         
         console.log(chalk.green(`✅ ZIP archive created: ${zipName}`));
         
@@ -44,7 +44,7 @@ async function zipCommand(options) {
     }
 }
 
-function createZipArchive(sourceDir, outputPath) {
+function createZipArchive(sourceDir, outputPath, pluginName) {
     return new Promise((resolve, reject) => {
         const output = fs.createWriteStream(outputPath);
         const archive = archiver('zip', {
@@ -61,7 +61,8 @@ function createZipArchive(sourceDir, outputPath) {
         });
 
         archive.pipe(output);
-        archive.directory(sourceDir, false);
+        // Create WordPress-compatible directory structure
+        archive.directory(sourceDir, pluginName);
         archive.finalize();
     });
 }

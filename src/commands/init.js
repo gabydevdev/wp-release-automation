@@ -90,33 +90,42 @@ async function initCommand() {
   await fs.writeFile(configPath, configContent);
   console.log(chalk.green('✅ Configuration saved to wp-release.config.js'));
   
-  // Create package.json if it doesn't exist
+  // Create or update package.json
   const packageJsonPath = path.join(process.cwd(), 'package.json');
-  if (!fs.existsSync(packageJsonPath)) {
-    const packageJson = {
+  let packageJson;
+  
+  if (fs.existsSync(packageJsonPath)) {
+    // Read existing package.json
+    packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    console.log(chalk.yellow('📝 Updating existing package.json'));
+  } else {
+    // Create new package.json
+    packageJson = {
       name: answers.pluginName.toLowerCase().replace(/\s+/g, '-'),
       version: '1.0.0',
       description: `WordPress plugin: ${answers.pluginName}`,
       main: answers.mainFile,
-      scripts: {
-        "version:patch": "npm version patch --no-git-tag-version",
-        "version:minor": "npm version minor --no-git-tag-version", 
-        "version:major": "npm version major --no-git-tag-version",
-        "build": "wp-release build || node ../wp-release-automation/scripts/update-version.js",
-        "zip": "wp-release zip || node ../wp-release-automation/scripts/create-zip.js",
-        "git:tag": "node ../wp-release-automation/scripts/create-git-tag.js",
-        "git:push": "node ../wp-release-automation/scripts/git-push.js",
-        "release": "npm run build && npm run zip && npm run git:tag",
-        "publish": "npm run release && npm run git:push"
-      },
       keywords: ["wordpress", "plugin"],
       author: "Your Name",
       license: "GPL-2.0-or-later"
     };
-    
-    await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    console.log(chalk.green('✅ Created package.json'));
+    console.log(chalk.green('✅ Creating new package.json'));
   }
+  
+  // Add or update scripts
+  packageJson.scripts = {
+    ...packageJson.scripts,
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version", 
+    "version:major": "npm version major --no-git-tag-version",
+    "build": "wp-release build",
+    "zip": "wp-release zip",
+    "release": "wp-release release",
+    "publish": "wp-release publish"
+  };
+  
+  await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  console.log(chalk.green('✅ Package.json updated with release scripts'));
   
   console.log(chalk.blue('\n🎉 Initialization complete!'));
   console.log(chalk.gray('\nAvailable commands:'));
