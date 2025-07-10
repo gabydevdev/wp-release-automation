@@ -1,0 +1,39 @@
+# Development files
+.git/
+.vscode/
+.idea/
+
+# Test files
+test/
+tests/
+*.test.js
+
+# Build artifacts
+build/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+*.swp
+*.swo
+
+# Documentation (keep README.md)
+docs/
+.github/
+
+# Example configs (keep templates/)
+example/
+examples/
+
+# Development dependencies
+node_modules/
