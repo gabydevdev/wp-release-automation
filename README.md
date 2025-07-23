@@ -96,8 +96,6 @@ npm run zip            # Create distribution ZIP
 npm run release        # Build → ZIP → Tag
 npm run wp-publish     # Release → Push to GitHub
 ```
-npm run publish        # Release → Push to GitHub
-```
 
 ## Configuration
 
