@@ -36,7 +36,7 @@ npm install --save-dev wp-release-automation
 2. **Bump version and release:**
    ```bash
    npm run version:patch
-   npm run publish
+   npm run wp-publish
    ```
 
 3. **Your WordPress-ready ZIP file is created and pushed to GitHub!**
@@ -94,7 +94,7 @@ npm run zip            # Create distribution ZIP
 
 # Complete workflows
 npm run release        # Build → ZIP → Tag
-npm run publish        # Release → Push to GitHub
+npm run wp-publish     # Release → Push to GitHub
 ```
 npm run publish        # Release → Push to GitHub
 ```
@@ -132,7 +132,7 @@ module.exports = {
 ```bash
 # Bump patch version and release
 npm run version:patch
-npm run publish
+npm run wp-publish
 ```
 
 ### Step by Step
@@ -200,7 +200,7 @@ Add to your package.json:
   "scripts": {
     "pre-release": "npm run test && npm run lint",
     "release:beta": "npm run version:patch && npm run build && npm run zip",
-    "deploy": "npm run publish && echo 'Released!'"
+    "deploy": "npm run wp-publish && echo 'Released!'"
   }
 }
 ```
