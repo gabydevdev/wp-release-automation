@@ -1,71 +1,71 @@
 {
-	"name": "wp-release-automation",
-	"version": "1.0.1",
-	"description": "A comprehensive CLI tool for automating WordPress plugin and theme release processes with version management, ZIP creation, and Git integration.",
-	"main": "src/index.js",
-	"scripts": {
-		"version:patch": "npm version patch --no-git-tag-version",
-		"version:minor": "npm version minor --no-git-tag-version",
-		"version:major": "npm version major --no-git-tag-version",
-		"version:set": "npm version $npm_config_version --no-git-tag-version",
-		"build": "node scripts/update-version.js",
-		"zip": "node scripts/create-zip.js",
-		"git:tag": "node scripts/create-git-tag.js",
-		"git:push": "node scripts/git-push.js",
-		"release": "npm run build && npm run zip && npm run git:tag",
-		"publish": "npm run release && npm run git:push",
-		"dev:version": "node src/commands/version.js",
-		"dev:build": "node src/commands/build.js",
-		"dev:zip": "node src/commands/zip.js",
-		"dev:release": "node src/commands/release.js"
-	},
-	"bin": {
-		"wp-release": "./bin/wp-release"
-	},
-	"dependencies": {
-		"archiver": "^5.3.2",
-		"chalk": "^4.1.2",
-		"commander": "^11.0.0",
-		"fs-extra": "^11.1.1",
-		"glob": "^10.3.3",
-		"inquirer": "^8.2.6",
-		"shelljs": "^0.8.5"
-	},
-	"devDependencies": {
-		"eslint": "^7.32.0"
-	},
-	"engines": {
-		"node": ">=14.0.0",
-		"npm": ">=6.0.0"
-	},
-	"license": "MIT",
-	"homepage": "https://github.com/gabydevdev/wp-release-automation#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/gabydevdev/wp-release-automation.git"
-	},
-	"bugs": {
-		"url": "https://github.com/gabydevdev/wp-release-automation/issues"
-	},
-	"keywords": [
-		"wordpress",
-		"release",
-		"automation",
-		"plugin",
-		"theme",
-		"cli",
-		"version-management",
-		"git-automation",
-		"zip-creation",
-		"wordpress-development",
-		"npm-scripts"
-	],
-	"files": [
-		"bin/",
-		"src/",
-		"scripts/",
-		"templates/",
-		"README.md",
-		"LICENSE"
-	]
+  "name": "wp-release-automation",
+  "version": "1.0.3",
+  "description": "A comprehensive CLI tool for automating WordPress plugin and theme release processes with version management, ZIP creation, and Git integration.",
+  "main": "src/index.js",
+  "scripts": {
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "version:set": "npm version $npm_config_version --no-git-tag-version",
+    "build": "wp-release build",
+    "zip": "wp-release zip",
+    "git:tag": "node scripts/create-git-tag.js",
+    "git:push": "node scripts/git-push.js",
+    "release": "wp-release release",
+    "publish": "wp-release publish",
+    "dev:version": "node src/commands/version.js",
+    "dev:build": "node src/commands/build.js",
+    "dev:zip": "node src/commands/zip.js",
+    "dev:release": "node src/commands/release.js"
+  },
+  "bin": {
+    "wp-release": "./bin/wp-release"
+  },
+  "dependencies": {
+    "archiver": "^5.3.2",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.3",
+    "inquirer": "^8.2.6",
+    "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/gabydevdev/wp-release-automation#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabydevdev/wp-release-automation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gabydevdev/wp-release-automation/issues"
+  },
+  "keywords": [
+    "wordpress",
+    "release",
+    "automation",
+    "plugin",
+    "theme",
+    "cli",
+    "version-management",
+    "git-automation",
+    "zip-creation",
+    "wordpress-development",
+    "npm-scripts"
+  ],
+  "files": [
+    "bin/",
+    "src/",
+    "scripts/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ]
 }

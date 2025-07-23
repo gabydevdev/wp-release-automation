@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const shell = require('shelljs');
+const glob = require('glob');
 
 async function buildCommand(options) {
     try {
@@ -25,34 +26,51 @@ async function buildCommand(options) {
         console.log(chalk.blue('📂 Copying files...'));
         
         // Add build directory to exclude patterns to prevent copying to itself
-        const allExcludePatterns = [...config.excludePatterns, config.buildDir + '/'];
+        const allExcludePatterns = [...config.excludePatterns, config.buildDir + '/', config.buildDir + '/**'];
         
         const excludeArgs = allExcludePatterns
             .map(pattern => `--exclude=${pattern}`)
             .join(' ');
         
         if (shell.which('rsync')) {
-            shell.exec(`rsync -av ${excludeArgs} . ${buildDir}/`);
+            // Use rsync on Unix-like systems
+            const result = shell.exec(`rsync -av ${excludeArgs} . ${buildDir}/`);
+            if (result.code !== 0) {
+                throw new Error(`rsync failed with code ${result.code}`);
+            }
         } else {
-            // Fallback for Windows without rsync - copy files individually
-            const files = await fs.readdir('.');
-            
-            for (const file of files) {
-                // Skip if it's the build directory
-                if (file === config.buildDir) {
-                    continue;
-                }
+            // Fallback for Windows or systems without rsync
+            try {
+                // Process exclude patterns to ensure they work with glob
+                const processedExcludePatterns = allExcludePatterns.map(pattern => {
+                    // Remove trailing slashes and add glob patterns for directories
+                    if (pattern.endsWith('/')) {
+                        const dirName = pattern.slice(0, -1);
+                        return [dirName, `${dirName}/**`];
+                    }
+                    return pattern;
+                }).flat();
                 
-                const shouldExclude = allExcludePatterns.some(pattern => {
-                    const cleanPattern = pattern.replace('/', '').replace('*', '');
-                    return file.includes(cleanPattern) || file.match(new RegExp(pattern.replace('*', '.*')));
+                console.log(chalk.gray(`🚫 Excluding: ${processedExcludePatterns.join(', ')}`));
+                
+                const files = glob.sync('**/*', { 
+                    dot: false,
+                    nodir: true,
+                    ignore: processedExcludePatterns
                 });
                 
-                if (!shouldExclude) {
+                console.log(chalk.blue(`📄 Found ${files.length} files to copy`));
+                
+                for (const file of files) {
                     const srcPath = path.join(process.cwd(), file);
                     const destPath = path.join(buildDir, file);
+                    
+                    // Ensure destination directory exists
+                    await fs.ensureDir(path.dirname(destPath));
                     await fs.copy(srcPath, destPath);
                 }
+            } catch (error) {
+                throw new Error(`File copying failed: ${error.message}`);
             }
         }
         

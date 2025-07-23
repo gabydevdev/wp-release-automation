@@ -4,9 +4,19 @@ const chalk = require('chalk');
 
 function bumpVersion(type) {
 	const packageJsonPath = path.resolve(process.cwd(), 'package.json');
+	
+	if (!fs.existsSync(packageJsonPath)) {
+		throw new Error('package.json not found in current directory');
+	}
+	
 	const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
 	const versionParts = packageJson.version.split('.').map(Number);
+	
+	if (versionParts.some(isNaN)) {
+		throw new Error('Invalid version format in package.json');
+	}
+	
 	if (type === 'patch') {
 		versionParts[2]++;
 	} else if (type === 'minor') {
@@ -16,6 +26,8 @@ function bumpVersion(type) {
 		versionParts[0]++;
 		versionParts[1] = 0;
 		versionParts[2] = 0;
+	} else {
+		throw new Error('Invalid version type. Use patch, minor, or major');
 	}
 
 	packageJson.version = versionParts.join('.');

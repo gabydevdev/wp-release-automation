@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const { bumpVersion, updateFiles } = require('./version');
 const { buildCommand } = require('./build');
 const { zipCommand } = require('./zip');
-const { commitChanges, pushChanges } = require('../utils/git-operations');
+const { commitChanges, pushChanges, createTag, pushTags } = require('../utils/git-operations');
 
 async function releaseCommand(options) {
     try {
@@ -17,7 +17,16 @@ async function releaseCommand(options) {
             return;
         }
         
+        delete require.cache[require.resolve(configPath)]; // Clear cache
         const config = require(configPath);
+        
+        // Validate configuration
+        if (!config.pluginName) {
+            throw new Error('Missing pluginName in configuration');
+        }
+        if (!config.buildDir) {
+            throw new Error('Missing buildDir in configuration');
+        }
         
         // Run pre-release hooks
         if (config.hooks.preRelease.length > 0) {
@@ -58,10 +67,14 @@ async function releaseCommand(options) {
         await zipCommand({ version: newVersion });
         
         // Git operations (if not dry run)
-        if (!options.dryRun) {
+        if (!options.dryRun && config.config.includeGitOps) {
             console.log(chalk.blue('📤 Committing changes to Git...'));
             await commitChanges(`Release version: ${newVersion}`);
-            await pushChanges();
+            
+            // Create and push git tag
+            const tagName = `${config.config.tagPrefix || 'v'}${newVersion}`;
+            await createTag(tagName);
+            console.log(chalk.green(`✅ Created tag: ${tagName}`));
         }
         
         // Run post-release hooks

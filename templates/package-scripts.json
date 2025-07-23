@@ -1,7 +1,9 @@
 {
-	"version:update": "node src/commands/version.js",
-	"build": "node src/commands/build.js",
-	"zip": "node src/commands/zip.js",
-	"release": "npm run version:update && npm run build && npm run zip && git push origin main && git push origin --tags",
-	"release:local": "npm run version:update && npm run build && npm run zip"
+	"version:patch": "npm version patch --no-git-tag-version",
+	"version:minor": "npm version minor --no-git-tag-version",
+	"version:major": "npm version major --no-git-tag-version",
+	"build": "wp-release build",
+	"zip": "wp-release zip",
+	"release": "wp-release release",
+	"publish": "wp-release publish"
 }

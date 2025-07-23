@@ -4,6 +4,7 @@ const { releaseCommand } = require('./commands/release');
 const { buildCommand } = require('./commands/build');
 const { versionCommand } = require('./commands/version');
 const { zipCommand } = require('./commands/zip');
+const { publishCommand } = require('./commands/publish');
 
 module.exports = {
   program,
@@ -11,5 +12,6 @@ module.exports = {
   releaseCommand,
   buildCommand,
   versionCommand,
-  zipCommand
+  zipCommand,
+  publishCommand
 };

@@ -58,7 +58,7 @@ wp-release version --type patch|minor|major
 ```bash
 wp-release build
 ```
-Updates version numbers across all configured files.
+Updates version numbers across all configured files and creates build directory.
 
 ### Create Distribution ZIP
 ```bash
@@ -68,13 +68,13 @@ Creates a WordPress-ready ZIP file for distribution.
 
 ### Complete Release
 ```bash
-wp-release release --type patch|minor|major
+wp-release release --type patch|minor|major [--dry-run]
 ```
 Full release process: version bump → build → ZIP → Git tag.
 
 ### Publish to GitHub
 ```bash
-wp-release publish --type patch|minor|major
+wp-release publish --type patch|minor|major [--dry-run]
 ```
 Complete release with push to GitHub.
 
@@ -89,15 +89,13 @@ npm run version:minor   # 1.0.0 → 1.1.0
 npm run version:major   # 1.0.0 → 2.0.0
 
 # Build and package
-npm run build          # Update versions across files
+npm run build          # Update versions and create build directory
 npm run zip            # Create distribution ZIP
-
-# Git operations
-npm run git:tag        # Create Git tag
-npm run git:push       # Push to GitHub
 
 # Complete workflows
 npm run release        # Build → ZIP → Tag
+npm run publish        # Release → Push to GitHub
+```
 npm run publish        # Release → Push to GitHub
 ```
 
@@ -177,7 +175,7 @@ your-plugin/
 
 The tool automatically updates version numbers in:
 
-- **WordPress Plugin Headers**: `* Version: 1.0.0`
+- **WordPress Plugin Headers**: `* Version: 1.0.3`
 - **Plugin Constants**: `define('PLUGIN_VERSION', '1.0.0')`
 - **README.md**: Version headers and stable tags
 - **package.json**: NPM version

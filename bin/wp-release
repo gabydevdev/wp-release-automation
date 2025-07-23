@@ -5,7 +5,7 @@ const { program } = require('commander');
 program
   .name('wp-release')
   .description('WordPress release automation CLI')
-  .version('1.0.0');
+  .version('1.0.1');
 
 program
   .command('init')

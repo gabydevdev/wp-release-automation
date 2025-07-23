@@ -3,13 +3,38 @@ const chalk = require('chalk');
 
 async function commitChanges(message) {
     return new Promise((resolve, reject) => {
-        exec(`git add . && git commit -m "${message}"`, (error, stdout, stderr) => {
+        // First check if there are any changes to commit
+        exec('git diff --staged --quiet', (error) => {
             if (error) {
-                reject(new Error(`Error committing changes: ${stderr}`));
-                return;
+                // There are staged changes, proceed with commit
+                exec(`git add . && git commit -m "${message}"`, (error, stdout, stderr) => {
+                    if (error) {
+                        reject(new Error(`Error committing changes: ${stderr}`));
+                        return;
+                    }
+                    console.log(chalk.green('✅ Changes committed successfully'));
+                    resolve(stdout);
+                });
+            } else {
+                // Check if there are any unstaged changes
+                exec('git diff --quiet', (error) => {
+                    if (error) {
+                        // There are unstaged changes, stage and commit them
+                        exec(`git add . && git commit -m "${message}"`, (error, stdout, stderr) => {
+                            if (error) {
+                                reject(new Error(`Error committing changes: ${stderr}`));
+                                return;
+                            }
+                            console.log(chalk.green('✅ Changes committed successfully'));
+                            resolve(stdout);
+                        });
+                    } else {
+                        // No changes to commit
+                        console.log(chalk.yellow('⚠️  No changes to commit'));
+                        resolve('');
+                    }
+                });
             }
-            console.log(chalk.green('✅ Changes committed successfully'));
-            resolve(stdout);
         });
     });
 }
