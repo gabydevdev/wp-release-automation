@@ -10,7 +10,9 @@ module.exports = {
 		"*.log",
 		".env*",
 		"tests/",
-		"*.md"
+		"*.md",
+		"*.zip",
+		"wp-release.config.js"
 	],
 	"config": {
 		"includeGitOps": true,

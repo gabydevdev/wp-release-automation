@@ -25,8 +25,16 @@ async function buildCommand(options) {
         // Copy files excluding patterns
         console.log(chalk.blue('📂 Copying files...'));
         
-        // Add build directory to exclude patterns to prevent copying to itself
-        const allExcludePatterns = [...config.excludePatterns, config.buildDir + '/', config.buildDir + '/**'];
+        // Add build directory and essential excludes to prevent copying to itself
+        const essentialExcludes = [
+            config.buildDir + '/', 
+            config.buildDir + '/**',
+            '*.zip',
+            'wp-release.config.js'
+        ];
+        
+        // Merge user excludes with essential excludes, removing duplicates
+        const allExcludePatterns = [...new Set([...config.excludePatterns, ...essentialExcludes])];
         
         const excludeArgs = allExcludePatterns
             .map(pattern => `--exclude=${pattern}`)

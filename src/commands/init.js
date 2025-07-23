@@ -35,7 +35,7 @@ async function initCommand() {
       type: 'input',
       name: 'excludePatterns',
       message: 'Files/folders to exclude (comma-separated):',
-      default: 'node_modules/, .git/, src/, *.log, .env*, tests/, *.md'
+      default: 'node_modules/, .git/, src/, *.log, .env*, tests/, *.md, *.zip, wp-release.config.js'
     },
     {
       type: 'confirm',
