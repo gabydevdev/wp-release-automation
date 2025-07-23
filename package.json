@@ -13,7 +13,7 @@
     "git:tag": "node scripts/create-git-tag.js",
     "git:push": "node scripts/git-push.js",
     "release": "wp-release release",
-    "publish": "wp-release publish",
+    "wp-publish": "wp-release publish",
     "dev:version": "node src/commands/version.js",
     "dev:build": "node src/commands/build.js",
     "dev:zip": "node src/commands/zip.js",

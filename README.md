@@ -175,7 +175,7 @@ your-plugin/
 
 The tool automatically updates version numbers in:
 
-- **WordPress Plugin Headers**: `* Version: 1.0.5`
+- **WordPress Plugin Headers**: `* Version: 1.0.6`
 - **Plugin Constants**: `define('PLUGIN_VERSION', '1.0.0')`
 - **README.md**: Version headers and stable tags
 - **package.json**: NPM version

@@ -5,5 +5,5 @@
 	"build": "wp-release build",
 	"zip": "wp-release zip",
 	"release": "wp-release release",
-	"publish": "wp-release publish"
+	"wp-publish": "wp-release publish"
 }

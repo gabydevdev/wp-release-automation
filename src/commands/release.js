@@ -37,10 +37,30 @@ async function releaseCommand(options) {
             }
         }
         
-        // Bump version
-        const newVersion = bumpVersion(options.type || 'patch');
-        updateFiles(newVersion);
-        console.log(chalk.green(`📝 Version bumped to ${newVersion}`));
+        // Bump version (only if not dry run)
+        let newVersion;
+        if (options.dryRun) {
+            // In dry run, use current version + 1 without actually changing files
+            const packageJsonPath = path.join(process.cwd(), 'package.json');
+            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+            const currentVersion = packageJson.version.split('.').map(Number);
+            if (options.type === 'minor') {
+                currentVersion[1]++;
+                currentVersion[2] = 0;
+            } else if (options.type === 'major') {
+                currentVersion[0]++;
+                currentVersion[1] = 0;
+                currentVersion[2] = 0;
+            } else {
+                currentVersion[2]++;
+            }
+            newVersion = currentVersion.join('.');
+            console.log(chalk.yellow(`🔍 Dry run: would bump version to ${newVersion}`));
+        } else {
+            newVersion = bumpVersion(options.type || 'patch');
+            updateFiles(newVersion);
+            console.log(chalk.green(`📝 Version bumped to ${newVersion}`));
+        }
         
         // Run pre-build hooks
         if (config.hooks.preBuild.length > 0) {

@@ -10,7 +10,12 @@ module.exports = {
     "*.log",
     ".env*",
     "tests/",
-    "*.md"
+    "*.md",
+    "*.zip",
+    ".vscode/",
+    "wp-release.config.js",
+    ".npmignore",
+    "package-lock.json"
   ],
   "config": {
     "includeGitOps": true,
