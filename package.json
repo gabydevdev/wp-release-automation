@@ -1,6 +1,6 @@
 {
   "name": "wp-release-automation",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A comprehensive CLI tool for automating WordPress plugin and theme release processes with version management, ZIP creation, and Git integration.",
   "main": "src/index.js",
   "scripts": {
