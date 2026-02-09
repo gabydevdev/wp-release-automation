@@ -6,6 +6,20 @@ const { buildCommand } = require('./build');
 const { zipCommand } = require('./zip');
 const { commitChanges, pushChanges, createTag, pushTags } = require('../utils/git-operations');
 
+function getCurrentVersion() {
+    const packageJsonPath = path.join(process.cwd(), 'package.json');
+    if (!fs.existsSync(packageJsonPath)) {
+        throw new Error('package.json not found in current directory');
+    }
+
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    if (!packageJson.version) {
+        throw new Error('package.json missing version');
+    }
+
+    return packageJson.version;
+}
+
 async function releaseCommand(options) {
     try {
         console.log(chalk.blue('🚀 Starting release process...'));
@@ -37,29 +51,38 @@ async function releaseCommand(options) {
             }
         }
         
-        // Bump version (only if not dry run)
+        // Bump version (only if requested and not dry run)
         let newVersion;
+        const shouldBump = typeof options.type === 'string' && options.type.length > 0;
+        const currentVersion = getCurrentVersion();
+
         if (options.dryRun) {
-            // In dry run, use current version + 1 without actually changing files
-            const packageJsonPath = path.join(process.cwd(), 'package.json');
-            const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-            const currentVersion = packageJson.version.split('.').map(Number);
-            if (options.type === 'minor') {
-                currentVersion[1]++;
-                currentVersion[2] = 0;
-            } else if (options.type === 'major') {
-                currentVersion[0]++;
-                currentVersion[1] = 0;
-                currentVersion[2] = 0;
+            if (shouldBump) {
+                // In dry run, use current version + 1 without actually changing files
+                const versionParts = currentVersion.split('.').map(Number);
+                if (options.type === 'minor') {
+                    versionParts[1]++;
+                    versionParts[2] = 0;
+                } else if (options.type === 'major') {
+                    versionParts[0]++;
+                    versionParts[1] = 0;
+                    versionParts[2] = 0;
+                } else {
+                    versionParts[2]++;
+                }
+                newVersion = versionParts.join('.');
+                console.log(chalk.yellow(`🔍 Dry run: would bump version to ${newVersion}`));
             } else {
-                currentVersion[2]++;
+                newVersion = currentVersion;
+                console.log(chalk.yellow(`🔍 Dry run: using current version ${newVersion}`));
             }
-            newVersion = currentVersion.join('.');
-            console.log(chalk.yellow(`🔍 Dry run: would bump version to ${newVersion}`));
-        } else {
-            newVersion = bumpVersion(options.type || 'patch');
+        } else if (shouldBump) {
+            newVersion = bumpVersion(options.type);
             updateFiles(newVersion);
             console.log(chalk.green(`📝 Version bumped to ${newVersion}`));
+        } else {
+            newVersion = currentVersion;
+            console.log(chalk.green(`📝 Using current version ${newVersion}`));
         }
         
         // Run pre-build hooks

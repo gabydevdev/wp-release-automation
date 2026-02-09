@@ -10,7 +10,7 @@ async function initCommand() {
     {
       type: 'input',
       name: 'pluginName',
-      message: 'Plugin/Theme name:',
+      message: 'Plugin name:',
       default: path.basename(process.cwd())
     },
     {
@@ -23,7 +23,7 @@ async function initCommand() {
       type: 'input',
       name: 'buildDir',
       message: 'Build directory:',
-      default: 'build'
+      default: 'dist'
     },
     {
       type: 'input',
@@ -35,7 +35,7 @@ async function initCommand() {
       type: 'input',
       name: 'excludePatterns',
       message: 'Files/folders to exclude (comma-separated):',
-      default: 'node_modules/, .git/, src/, *.log, .env*, tests/, *.md, *.zip, wp-release.config.js'
+      default: 'node_modules/, vendor/, .git/, .doc/, .scripts/, dist/, src/, package.json, package-lock.json, composer.json, composer.lock, *.log, .*, phpcs*, *.md, *.zip, *.config.js'
     },
     {
       type: 'confirm',
@@ -115,13 +115,13 @@ async function initCommand() {
   // Add or update scripts
   packageJson.scripts = {
     ...packageJson.scripts,
-    "version:patch": "npm version patch --no-git-tag-version",
-    "version:minor": "npm version minor --no-git-tag-version", 
-    "version:major": "npm version major --no-git-tag-version",
-    "build": "wp-release build",
-    "zip": "wp-release zip",
-    "release": "wp-release release",
-    "publish": "wp-release publish"
+    "package:version:patch": "npm version patch --no-git-tag-version",
+    "package:version:minor": "npm version minor --no-git-tag-version", 
+    "package:version:major": "npm version major --no-git-tag-version",
+    "package:build": "wp-release build",
+    "package:zip": "wp-release zip",
+    "package:release": "wp-release release",
+    "package:publish": "wp-release publish"
   };
   
   await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
@@ -129,13 +129,13 @@ async function initCommand() {
   
   console.log(chalk.blue('\n🎉 Initialization complete!'));
   console.log(chalk.gray('\nAvailable commands:'));
-  console.log(chalk.cyan('  npm run version:patch') + '  - Increment patch version (1.0.0 → 1.0.1)');
-  console.log(chalk.cyan('  npm run version:minor') + '  - Increment minor version (1.0.0 → 1.1.0)');
-  console.log(chalk.cyan('  npm run version:major') + '  - Increment major version (1.0.0 → 2.0.0)');
-  console.log(chalk.cyan('  npm run build') + '        - Update version across files');
-  console.log(chalk.cyan('  npm run zip') + '          - Create distribution ZIP');
-  console.log(chalk.cyan('  npm run release') + '      - Build, ZIP, and tag');
-  console.log(chalk.cyan('  npm run publish') + '      - Complete release with push to GitHub');
+  console.log(chalk.cyan('  npm run package:version:patch') + '  - Increment patch version (1.0.0 → 1.0.1)');
+  console.log(chalk.cyan('  npm run package:version:minor') + '  - Increment minor version (1.0.0 → 1.1.0)');
+  console.log(chalk.cyan('  npm run package:version:major') + '  - Increment major version (1.0.0 → 2.0.0)');
+  console.log(chalk.cyan('  npm run package:build') + '        - Update version across files');
+  console.log(chalk.cyan('  npm run package:zip') + '          - Create distribution ZIP');
+  console.log(chalk.cyan('  npm run package:release') + '      - Build, ZIP, and tag');
+  console.log(chalk.cyan('  npm run package:publish') + '      - Complete release with push to GitHub');
 }
 
 module.exports = { initCommand };

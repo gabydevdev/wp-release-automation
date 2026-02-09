@@ -27,56 +27,76 @@ npm install --save-dev wp-release-automation
 
 ## Quick Start
 
-1. **Initialize your project:**
-   ```bash
-   cd your-wordpress-plugin
-   wp-release init
-   ```
+**Initialize your project:**
 
-2. **Bump version and release:**
-   ```bash
-   npm run version:patch
-   npm run wp-publish
-   ```
+```bash
+cd your-wordpress-plugin
+wp-release init
+```
 
-3. **Your WordPress-ready ZIP file is created and pushed to GitHub!**
+**Release with current version (no bump):**
+
+```bash
+wp-release release
+```
+
+**Release with a bump when needed:**
+
+```bash
+wp-release release --type patch
+```
 
 ## CLI Commands
 
 ### Initialize Project
+
 ```bash
 wp-release init
 ```
+
 Sets up configuration and package.json scripts for your WordPress project.
 
 ### Version Management
+
 ```bash
 wp-release version --type patch|minor|major
+wp-release version --set 2.0.0
 ```
 
+Defaults to `patch` when `--type` is omitted.
+Use `--set` to apply an explicit version.
+
 ### Build Process
+
 ```bash
 wp-release build
 ```
-Updates version numbers across all configured files and creates build directory.
+
+Creates the build directory and copies files based on your exclude patterns.
 
 ### Create Distribution ZIP
+
 ```bash
 wp-release zip
 ```
+
 Creates a WordPress-ready ZIP file for distribution.
 
 ### Complete Release
+
 ```bash
-wp-release release --type patch|minor|major [--dry-run]
+wp-release release [--type patch|minor|major] [--dry-run]
 ```
-Full release process: version bump → build → ZIP → Git tag.
+
+Full release process: build → ZIP → Git tag. Provide `--type` to bump the version first.
 
 ### Publish to GitHub
+
 ```bash
-wp-release publish --type patch|minor|major [--dry-run]
+wp-release publish [--type patch|minor|major] [--dry-run]
 ```
-Complete release with push to GitHub.
+
+Complete release with push to GitHub. Provide `--type` to bump the version first.
 
 ## NPM Scripts
 
@@ -89,12 +109,12 @@ npm run version:minor   # 1.0.0 → 1.1.0
 npm run version:major   # 1.0.0 → 2.0.0
 
 # Build and package
-npm run build          # Update versions and create build directory
+npm run build          # Create build directory and copy files
 npm run zip            # Create distribution ZIP
 
 # Complete workflows
-npm run release        # Build → ZIP → Tag
-npm run wp-publish     # Release → Push to GitHub
+npm run release        # Build → ZIP → Tag (no bump)
+npm run wp-publish     # Release → Push to GitHub (no bump)
 ```
 
 ## Configuration
@@ -127,13 +147,17 @@ module.exports = {
 ## Workflow Examples
 
 ### Simple Release
+
 ```bash
+# Release with current version (no bump)
+wp-release release
+
 # Bump patch version and release
-npm run version:patch
-npm run wp-publish
+wp-release release --type patch
 ```
 
 ### Step by Step
+
 ```bash
 # 1. Bump version
 npm run version:minor
@@ -148,12 +172,19 @@ npm run git:push
 ```
 
 ### Using CLI Directly
+
 ```bash
-# One command release
+# One command publish with bump
 wp-release publish --type patch
+
+# One command publish without bumping
+wp-release publish
 
 # Dry run to see what would happen
 wp-release release --type minor --dry-run
+
+# Release without bumping
+wp-release release
 ```
 
 ## File Structure
@@ -173,10 +204,12 @@ your-plugin/
 
 The tool automatically updates version numbers in:
 
-- **WordPress Plugin Headers**: `* Version: 1.0.6`
-- **Plugin Constants**: `define('PLUGIN_VERSION', '1.0.0')`
-- **README.md**: Version headers and stable tags
 - **package.json**: NPM version
+- **Main plugin file**: `* Version: 1.0.6`
+- **README.md**: Version headers and stable tags (if present)
+- **CHANGELOG.md**: Version headers (if present)
+- **composer.json**: `version` field (if present)
+- **readme.txt**: `Stable tag:` and `Version:` (if present)
 
 ## Git Integration
 

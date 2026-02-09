@@ -1,6 +1,6 @@
 {
   "name": "wp-release-automation",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "description": "A comprehensive CLI tool for automating WordPress plugin and theme release processes with version management, ZIP creation, and Git integration.",
   "main": "src/index.js",
   "scripts": {
@@ -14,10 +14,7 @@
     "git:push": "node scripts/git-push.js",
     "release": "wp-release release",
     "wp-publish": "wp-release publish",
-    "dev:version": "node src/commands/version.js",
-    "dev:build": "node src/commands/build.js",
-    "dev:zip": "node src/commands/zip.js",
-    "dev:release": "node src/commands/release.js"
+    "test:pack": "npm pack && npm install -g ./wp-release-automation-*.tgz && wp-release --help && npm uninstall -g wp-release-automation"
   },
   "bin": {
     "wp-release": "./bin/wp-release"
@@ -35,8 +32,8 @@
     "eslint": "^7.32.0"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=16.14.0",
+    "npm": ">=8.0.0"
   },
   "license": "MIT",
   "homepage": "https://github.com/gabydevdev/wp-release-automation#readme",
@@ -64,7 +61,6 @@
     "bin/",
     "src/",
     "scripts/",
-    "templates/",
     "README.md",
     "LICENSE"
   ]
