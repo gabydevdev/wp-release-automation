@@ -4,16 +4,16 @@
   "description": "A comprehensive CLI tool for automating WordPress plugin and theme release processes with version management, ZIP creation, and Git integration.",
   "main": "src/index.js",
   "scripts": {
-    "version:patch": "npm version patch --no-git-tag-version",
-    "version:minor": "npm version minor --no-git-tag-version",
-    "version:major": "npm version major --no-git-tag-version",
-    "version:set": "npm version $npm_config_version --no-git-tag-version",
-    "build": "wp-release build",
-    "zip": "wp-release zip",
+    "package:version:patch": "npm version patch --no-git-tag-version",
+    "package:version:minor": "npm version minor --no-git-tag-version",
+    "package:version:major": "npm version major --no-git-tag-version",
+    "package:version:set": "npm version $npm_config_version --no-git-tag-version",
+    "package:build": "wp-release build",
+    "package:zip": "wp-release zip",
     "git:tag": "node scripts/create-git-tag.js",
     "git:push": "node scripts/git-push.js",
-    "release": "wp-release release",
-    "wp-publish": "wp-release publish",
+    "package:release": "wp-release release",
+    "package:publish": "wp-release publish",
     "test:pack": "npm pack && npm install -g ./wp-release-automation-*.tgz && wp-release --help && npm uninstall -g wp-release-automation"
   },
   "bin": {
@@ -22,10 +22,10 @@
   "dependencies": {
     "archiver": "^5.3.2",
     "chalk": "^4.1.2",
-    "commander": "^11.0.0",
-    "fs-extra": "^11.1.1",
-    "glob": "^10.3.3",
-    "inquirer": "^8.2.6",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.3.3",
+    "glob": "^10.5.0",
+    "inquirer": "^8.2.7",
     "shelljs": "^0.8.5"
   },
   "devDependencies": {

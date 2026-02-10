@@ -35,7 +35,7 @@ async function initCommand() {
       type: 'input',
       name: 'excludePatterns',
       message: 'Files/folders to exclude (comma-separated):',
-      default: 'node_modules/, vendor/, .git/, .doc/, .scripts/, dist/, src/, package.json, package-lock.json, composer.json, composer.lock, *.log, .*, phpcs*, *.md, *.zip, *.config.js'
+      default: '.git*, src/, node_modules/, package.json, package-lock.json, .*, phpcs*, *.md, *.zip, *.config.js'
     },
     {
       type: 'confirm',
